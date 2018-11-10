@@ -1,0 +1,19 @@
+map $http_upgrade $connection_upgrade {
+    default upgrade;
+    ""      close;
+}
+
+server {    
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    server_tokens off;
+
+    include proxy_params;
+
+    error_log /dev/stderr error;
+    access_log /dev/stdout;
+    
+    location ~ ^/?${PATH_PREFIX}(/?)(.*) {
+        proxy_pass ${PROTOCOL:-http}://${HOST:-backend}/$2;
+    }
+}

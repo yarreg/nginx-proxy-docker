@@ -3,6 +3,10 @@ map $http_upgrade $connection_upgrade {
     ""      close;
 }
 
+upstream host {
+    server ${HOST:-backend};
+}
+
 server {    
     listen 80 default_server;
     listen [::]:80 default_server;
@@ -14,6 +18,6 @@ server {
     access_log /dev/stdout;
     
     location ~ ^/?${PATH_PREFIX}(/?)(.*) {
-        proxy_pass ${PROTOCOL:-http}://${HOST:-backend}/$2;
+        proxy_pass ${PROTOCOL:-http}://host/$2;
     }
 }

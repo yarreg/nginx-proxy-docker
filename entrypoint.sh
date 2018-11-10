@@ -9,14 +9,15 @@ function tmpl()
         s/^\(.*\)$/echo '\1'/;
     }
     s/^[[:space:]]*@//;"
-
-    echo "Preparing template: $1.tmpl"
-    sed -e "$SCRIPT" $1.tmpl | sh > $1
+    
+    sed -e "$SCRIPT" $1 | sh > ${1%.*}
 }
 
-# Process .tmpl files
-tmpl /etc/nginx/conf.d/default.conf
-tmpl /etc/nginx/proxy_params
+for file in $(find /etc/nginx -type f -name "*.tmpl")
+do
+    echo "Preparing nginx configuration file from template: $file"
+    tmpl $file
+done
 
 # Starting nginx
 nginx -g "daemon off;"

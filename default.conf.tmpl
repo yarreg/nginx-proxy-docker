@@ -18,6 +18,6 @@ server {
     access_log /dev/stdout;
     
     location ~ ^/?${PATH_PREFIX}(/?)(.*) {
-        proxy_pass ${PROTOCOL:-http}://host/$2;
+        proxy_pass ${PROTOCOL:-http}://host/$2$is_args$args;
     }
 }
